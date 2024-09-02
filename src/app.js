@@ -1,27 +1,22 @@
+const path = require('path')
 const express = require('express')
 
+// used one time to create an app
+// then we can use functions from this app to help create our page
 const app = express()
+const publicDirectoryPath = path.join(__dirname, '../public')
 
-// if we had app.com
-app.get('', (req, res) => {
-    res.send('Hello express!')
-})
+app.use(express.static(publicDirectoryPath))
 
-// app.com/help
-app.get('/help', (req, res) => {
-    res.send('Help page')
-})
-
-//app.com/about
-app.get('/about', (req, res) => {
-    res.send('About page')
-})
-
-//app.com/weather
+// /weather
 app.get('/weather', (req, res) => {
-    res.send('Weather page')
+    res.send({
+        forecast: 'Overcast',
+        location: 'Toronto'
+    })
 })
 
+// runs once to make the page go live
 app.listen(3000, () => {
     console.log('Server is up on port 3000')
 })
