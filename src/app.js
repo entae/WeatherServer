@@ -1,6 +1,8 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
 // used one time to create an app
 // then we can use functions from this app to help create our page
@@ -42,12 +44,58 @@ app.get('/help', (req, res) => {
     })
 })
 
-// /weather
 app.get('/weather', (req, res) => {
-    res.send({
-        forecast: 'Overcast',
-        location: 'Toronto',
-        name: 'In Tae Chung'
+    // if there's no address being searched send error
+    if (!req.query.address) {
+        res.send({
+            error: 'You must provide an address to search'
+        })
+    } else {
+        geocode(req.query.address, (error, {latitude, longitude, location} = {} ) => {
+            if (error) {
+                res.send({ error })
+            } else {
+                forecast(latitude, longitude, (error, weatherData) => {
+                    if (error) {
+                        return res.send({ error })
+                    }
+                    
+                    res.send({
+                        forecast: weatherData,
+                        location,
+                        address: req.query.address
+                    })
+                    console.log(location)
+                    console.log(weatherData)
+                })
+            }
+        })
+    }
+})
+
+app.get('/products', (req, res) => {
+    if (!req.query.search) {
+        
+    } else {
+        res.send({
+            products: [],
+        })
+    }
+})
+
+app.get('/help/*',(req, res) => {
+    res.render('404', {
+        title: '404',
+        name: 'In Tae Chung',
+        errorMessage: 'Help article not found'
+    })
+})
+
+app.get('*', (req, res) => {
+    res.render('404', {
+        title: '404 - Page not found',
+        name: 'In Tae Chung',
+        errorMessage: 'Page not found'
     })
 })
 
