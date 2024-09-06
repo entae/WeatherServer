@@ -50,16 +50,21 @@ app.get('/weather', (req, res) => {
         res.send({
             error: 'You must provide an address to search'
         })
-    } else {
+    } else { 
+        // address was provided
         geocode(req.query.address, (error, {latitude, longitude, location} = {} ) => {
             if (error) {
+                // address could not be matched to any result
                 res.send({ error })
             } else {
+                // there was a match for the address
                 forecast(latitude, longitude, (error, weatherData) => {
+                    // if there was an error retrieving the data
                     if (error) {
                         return res.send({ error })
                     }
                     
+                    // data was found, is passed on as JSON
                     res.send({
                         forecast: weatherData,
                         location,

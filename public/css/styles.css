@@ -41,3 +41,7 @@ h1 {
 .portrait {
     width: 250px;
 }
+
+p {
+    white-space: pre-line;
+}
