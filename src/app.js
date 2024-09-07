@@ -78,16 +78,6 @@ app.get('/weather', (req, res) => {
     }
 })
 
-app.get('/products', (req, res) => {
-    if (!req.query.search) {
-        
-    } else {
-        res.send({
-            products: [],
-        })
-    }
-})
-
 app.get('/help/*',(req, res) => {
     res.render('404', {
         title: '404',
